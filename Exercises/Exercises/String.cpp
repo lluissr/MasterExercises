@@ -2,79 +2,114 @@
 #include "String.h"
 
 
-String::String() {
-
-}
-
-String::String(const char text[])
+int String::GetLenght(const char* text)
 {
-	this->mem_alloc = sizeof(text);
-	stringStart = new char;
-	this->copy(this->stringStart, text);
+	if (text == nullptr)
+	{
+		return 0;
+	}
+
+	int textSize = 0;
+	while (*text++)
+	{
+		textSize++;
+	}
+
+	return textSize;
 }
 
-String::String(String &string)
+
+String::String(const char* text)
 {
-	stringStart = new char;
-	this->copy(this->stringStart, string.stringStart);
-	this->mem_alloc = string.mem_alloc;
+
+	mem_alloc = GetLenght(text);
+	stringStart = (char*)malloc(mem_alloc);
+	Copy(text);
 }
 
-
-int String::lenght() {
-	return mem_alloc;
-}
-
-
-void String::clear() 
+String::String(String* string)
 {
-	mem_alloc = 0;
+
+	mem_alloc = string->mem_alloc;
+	stringStart = (char*)malloc(mem_alloc);
+	Copy(string->stringStart);
+}
+
+
+void String::Clear()
+{
 	stringStart = '\0'; //nullptr
+	mem_alloc = GetLenght(stringStart);
 }
 
 void String::Print() {
-	if (lenght() == 0) {
-		std::cout << "Empty string";
+	if (mem_alloc == 0) 
+	{
+		std::cout << "Empty string " << mem_alloc;
 	}
-	else {
+	else 
+	{
 		std::cout << stringStart << "\n";
-		std::cout << lenght() << " \n";
+		std::cout << mem_alloc << " \n";
 	}
 }
 
-void String::copy(char *d, const char *s)
+void String::Copy(const char *s)
 {
-	while (*s)
-	{
-		*d++ = *s++;
-	}
-	*d = 0;
+	char* initalPosition = stringStart;
+	while (*stringStart++ = *s++);
+	stringStart = initalPosition;
 }
 
 
-void String::concat(String &destination, const String &source)
+String String::operator+(String& b) {
+
+
+	//TODO: REFACT WITH COPY METHOD
+
+	int totalSize = mem_alloc + b.mem_alloc;
+	char* finalString = (char*)malloc(totalSize);
+
+	char* finalStringInitialPosition = finalString;
+
+	char* initalPosition = stringStart;
+	while (*stringStart != 0)
+	{
+		*finalString++ = *stringStart++;
+	}
+	stringStart = initalPosition;
+
+	initalPosition = b.stringStart;
+	while (*b.stringStart != 0)
+	{
+		*finalString++ = *b.stringStart;
+		*b.stringStart++;
+	}
+	*finalString = *b.stringStart;
+	b.stringStart = initalPosition;
+
+	finalString = finalStringInitialPosition;
+
+	return String(finalString);
+}
+
+
+bool String::operator==(const char* b)
 {
-	int x = 0;
-	while (destination.stringStart[x] != '\0')
+	if (mem_alloc != GetLenght(b))
 	{
-		x++;
+		return false;
 	}
-	for (int i = 0; source.stringStart[i] != '\0'; i++)
+
+	char* stringStartCopy = stringStart;
+
+	while (*stringStartCopy != 0)
 	{
-		destination.stringStart[x++] = source.stringStart[i];
+		if (*stringStartCopy++ != *b++)
+		{
+			return false;
+		};
 	}
-	destination.stringStart[x] = '\0';
-	destination.mem_alloc = x - 1;
-}
 
-String& String::operator+(const String& b) {
-	String string(*this);
-	this->concat(string, b);
-	return string;
-}
-
-bool String::operator==(const char* rhs)
-{
-	bool a = *stringStart == *rhs;
-	return a;
+	return true;
 }

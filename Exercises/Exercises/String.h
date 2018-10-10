@@ -6,17 +6,15 @@ private:
 	unsigned int mem_alloc;
 
 public:
-	String();
-	String(const char text[]);
-	String(String &string);
+	String(const char* text);
+	String(String* text);
 
-	int lenght();
-	void clear();
+	int GetLenght(const char* text);
+	void Clear();
 	void Print();
 
-	void copy(char *d, const char *s);
-	void concat(String &destination, const String &source);
+	void Copy(const char *s);
 
-	String& operator+(const String& b);
+	String operator+(String& b);
 	bool operator==(const char* rhs);
 };
