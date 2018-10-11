@@ -12,6 +12,7 @@ public:
 	int GetLenght(const char* text);
 	void Clear();
 	void Print();
+	int lenght();
 
 	void Copy(const char *s);
 

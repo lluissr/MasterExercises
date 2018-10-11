@@ -42,6 +42,11 @@ void String::Clear()
 	mem_alloc = GetLenght(stringStart);
 }
 
+int String::lenght()
+{
+	return mem_alloc;
+}
+
 void String::Print() {
 	if (mem_alloc == 0) 
 	{
